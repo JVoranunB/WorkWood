@@ -1,0 +1,827 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Theme Preview — Wood&Craft</title>
+<link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,wght@0,400;0,700;1,400&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400;1,600&family=DM+Sans:wght@300;400;500&family=Fraunces:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400;500&family=Jost:wght@300;400;500&family=Playfair+Display:ital,wght@0,500;0,700;1,500&family=Raleway:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+
+/* ── Switcher bar ──────────────────────────────────────────── */
+.switcher {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 1000;
+  background: #0D0D0D;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.8rem 2rem;
+  border-bottom: 1px solid rgba(255,255,255,0.07);
+}
+
+.switcher-label {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.68rem;
+  color: rgba(255,255,255,0.35);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  margin-right: 0.75rem;
+  white-space: nowrap;
+}
+
+.theme-btn {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 0.45rem 1.1rem;
+  border: 1px solid rgba(255,255,255,0.12);
+  background: transparent;
+  color: rgba(255,255,255,0.42);
+  cursor: pointer;
+  transition: all 0.2s;
+  border-radius: 2px;
+}
+.theme-btn:hover {
+  border-color: rgba(255,255,255,0.38);
+  color: rgba(255,255,255,0.85);
+}
+.theme-btn.active {
+  background: #fff;
+  border-color: #fff;
+  color: #0D0D0D;
+}
+
+/* ── Theme variables ───────────────────────────────────────── */
+.preview[data-theme="linen"] {
+  --bg:           #F5F0E8;
+  --bg-card:      #EDE6D8;
+  --surface:      #E5DDD0;
+  --accent:       #7B4F2E;
+  --accent-light: #9B6A42;
+  --text:         #2D2420;
+  --text-dim:     rgba(45,36,32,0.62);
+  --text-muted:   rgba(45,36,32,0.36);
+  --border:       rgba(45,36,32,0.10);
+  --border-hover: rgba(123,79,46,0.30);
+  --heading:      'Fraunces', serif;
+  --body:         'Jost', sans-serif;
+}
+
+.preview[data-theme="forest"] {
+  --bg:           #162119;
+  --bg-card:      #1F2E24;
+  --surface:      #273A2C;
+  --accent:       #A3C27A;
+  --accent-light: #BDD89A;
+  --text:         #EDE8E0;
+  --text-dim:     rgba(237,232,224,0.62);
+  --text-muted:   rgba(237,232,224,0.36);
+  --border:       rgba(237,232,224,0.08);
+  --border-hover: rgba(163,194,122,0.30);
+  --heading:      'Fraunces', serif;
+  --body:         'Jost', sans-serif;
+}
+
+.preview[data-theme="ink"] {
+  --bg:           #18181B;
+  --bg-card:      #27272A;
+  --surface:      #3F3F46;
+  --accent:       #E8A430;
+  --accent-light: #F0BB55;
+  --text:         #F4F4F5;
+  --text-dim:     rgba(244,244,245,0.62);
+  --text-muted:   rgba(244,244,245,0.36);
+  --border:       rgba(244,244,245,0.08);
+  --border-hover: rgba(232,164,48,0.30);
+  --heading:      'Fraunces', serif;
+  --body:         'Jost', sans-serif;
+}
+
+.preview[data-theme="terra"] {
+  --bg:           #FAF6F1;
+  --bg-card:      #F0E9DF;
+  --surface:      #E8DDD0;
+  --accent:       #C1674A;
+  --accent-light: #D4805E;
+  --text:         #2A1810;
+  --text-dim:     rgba(42,24,16,0.62);
+  --text-muted:   rgba(42,24,16,0.36);
+  --border:       rgba(42,24,16,0.10);
+  --border-hover: rgba(193,103,74,0.30);
+  --heading:      'Fraunces', serif;
+  --body:         'Jost', sans-serif;
+}
+
+/* ── Walnut & Linen — calibrated directly from your product photos ── */
+.preview[data-theme="walnut"] {
+  --bg:           #F4EEE3;
+  --bg-card:      #E5DBC6;
+  --surface:      #D9CEB5;
+  --accent:       #8B5322;
+  --accent-light: #B36D2E;
+  --text:         #2A1E13;
+  --text-dim:     rgba(42,30,19,0.65);
+  --text-muted:   rgba(42,30,19,0.38);
+  --border:       rgba(42,30,19,0.10);
+  --border-hover: rgba(139,83,34,0.28);
+  --heading:      'Fraunces', serif;
+  --body:         'Jost', sans-serif;
+}
+
+/* ── Preview wrapper ───────────────────────────────────────── */
+.preview {
+  margin-top: 52px;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--body);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* smooth theme transitions */
+.preview,
+.preview * {
+  transition:
+    background-color 0.45s ease,
+    border-color     0.45s ease,
+    color            0.35s ease;
+}
+
+/* ── Nav ───────────────────────────────────────────────────── */
+.p-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.3rem 3rem;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg);
+  position: sticky;
+  top: 52px;
+  z-index: 10;
+}
+
+.p-logo {
+  font-family: var(--heading);
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--text);
+}
+.p-logo span { color: var(--accent); }
+
+.p-nav-links {
+  display: flex;
+  gap: 2.2rem;
+  list-style: none;
+}
+.p-nav-links a {
+  font-family: var(--body);
+  font-size: 0.73rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  text-decoration: none;
+}
+.p-nav-links a:hover { color: var(--text); }
+
+.p-nav-cta {
+  font-family: var(--body);
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 0.55rem 1.3rem;
+  border: 1px solid var(--accent);
+  color: var(--accent);
+  background: none;
+  cursor: pointer;
+}
+.p-nav-cta:hover { background: var(--accent); color: var(--bg); }
+
+/* ── Hero ──────────────────────────────────────────────────── */
+.p-hero {
+  padding: 6rem 3rem 5rem;
+  max-width: 860px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.p-tag {
+  font-family: var(--body);
+  font-size: 0.7rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 1.6rem;
+}
+
+.p-hero h1 {
+  font-family: var(--heading);
+  font-size: clamp(2.4rem, 5vw, 3.8rem);
+  font-weight: 600;
+  line-height: 1.1;
+  color: var(--text);
+  margin-bottom: 1.4rem;
+}
+.p-hero h1 em { font-style: italic; color: var(--accent); }
+
+.p-hero > p {
+  font-family: var(--body);
+  font-size: 0.98rem;
+  line-height: 1.75;
+  color: var(--text-dim);
+  max-width: 520px;
+  margin: 0 auto 2.5rem;
+  font-weight: 300;
+}
+
+.p-buttons {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-bottom: 3.5rem;
+}
+
+.btn-primary {
+  background: var(--accent);
+  color: var(--bg);
+  padding: 0.85rem 2rem;
+  font-family: var(--body);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-block;
+}
+.btn-primary:hover { background: var(--accent-light); }
+
+.btn-outline {
+  background: none;
+  color: var(--text);
+  padding: 0.85rem 2rem;
+  font-family: var(--body);
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  border: 1px solid var(--border);
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-block;
+}
+.btn-outline:hover { border-color: var(--text-dim); }
+
+.p-stats {
+  display: flex;
+  gap: 3rem;
+  justify-content: center;
+  padding-top: 2.5rem;
+  border-top: 1px solid var(--border);
+}
+
+.p-stat h3 {
+  font-family: var(--heading);
+  font-size: 1.9rem;
+  font-weight: 600;
+  color: var(--accent);
+  margin-bottom: 0.25rem;
+}
+.p-stat p {
+  font-family: var(--body);
+  font-size: 0.68rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  font-weight: 400;
+}
+
+/* ── Section divider ───────────────────────────────────────── */
+.p-divider {
+  height: 1px;
+  background: var(--border);
+  margin: 0 3rem;
+}
+
+/* ── Cards ─────────────────────────────────────────────────── */
+.p-cards-section {
+  padding: 4.5rem 3rem;
+}
+
+.p-section-label {
+  font-family: var(--body);
+  font-size: 0.68rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 0.8rem;
+}
+
+.p-section-title {
+  font-family: var(--heading);
+  font-size: clamp(1.6rem, 3vw, 2.2rem);
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 2.5rem;
+}
+.p-section-title em { font-style: italic; color: var(--accent); }
+
+.p-cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+}
+
+.p-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  padding: 2rem;
+  cursor: pointer;
+  overflow: hidden;
+}
+.p-card:hover { border-color: var(--border-hover); }
+
+/* Card images — visible on all themes */
+.p-card-img {
+  display: block;
+  margin: -2rem -2rem 1.5rem;
+  height: 160px;
+  overflow: hidden;
+}
+.p-card-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+.p-card:hover .p-card-img img { transform: scale(1.04); }
+
+.p-card-num {
+  font-family: var(--heading);
+  font-size: 0.8rem;
+  color: var(--accent);
+  margin-bottom: 1.1rem;
+}
+.p-card h4 {
+  font-family: var(--heading);
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 0.65rem;
+}
+.p-card p {
+  font-family: var(--body);
+  font-size: 0.82rem;
+  line-height: 1.65;
+  color: var(--text-muted);
+  font-weight: 300;
+}
+.p-card-arrow {
+  margin-top: 1.5rem;
+  color: var(--accent);
+  font-size: 1rem;
+}
+
+/* ── Hero background (Applied theme only) ─────────────────── */
+.p-hero-bg {
+  display: none;
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+.p-hero-bg img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  filter: brightness(0.28);
+}
+.p-hero-bg::after {
+  content: '';
+  position: absolute; inset: 0;
+  background: linear-gradient(to right, rgba(30,18,8,0.55) 0%, transparent 65%);
+}
+.preview[data-theme="walnut"] .p-hero {
+  position: relative;
+  height: 100vh;
+  max-width: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.preview[data-theme="walnut"] .p-hero-bg { display: block; }
+
+/* Passthrough wrapper in all themes except walnut */
+.p-hero-content { width: 100%; }
+
+/* Walnut only: becomes the centred overlay inside the full-bleed hero */
+.preview[data-theme="walnut"] .p-hero-content {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 0 3rem;
+  max-width: 860px;
+  will-change: opacity;
+}
+
+/* Applied theme — translucent nav over the hero image */
+.preview[data-theme="walnut"] .p-nav {
+  background: rgba(20, 12, 6, 0.30);
+  backdrop-filter: blur(14px) saturate(1.4);
+  border-bottom-color: rgba(244, 238, 227, 0.10);
+}
+.preview[data-theme="walnut"] .p-logo         { color: #F4EEE3; }
+.preview[data-theme="walnut"] .p-logo span    { color: #D4A85A; }
+.preview[data-theme="walnut"] .p-nav-links a  { color: rgba(244,238,227,0.65); }
+.preview[data-theme="walnut"] .p-nav-links a:hover { color: #F4EEE3; }
+.preview[data-theme="walnut"] .p-nav-cta {
+  border-color: rgba(244,238,227,0.35);
+  color: #F4EEE3;
+}
+.preview[data-theme="walnut"] .p-nav-cta:hover {
+  background: rgba(244,238,227,0.12);
+}
+
+/* Applied hero — force light text over dark photo */
+.preview[data-theme="walnut"] .p-hero .p-tag      { color: #D4A85A !important; }
+.preview[data-theme="walnut"] .p-hero h1           { color: #F4EEE3 !important; }
+.preview[data-theme="walnut"] .p-hero-content > p  { color: rgba(244,238,227,0.70) !important; }
+.preview[data-theme="walnut"] .p-stat h3           { color: #D4A85A !important; }
+.preview[data-theme="walnut"] .p-stat p            { color: rgba(244,238,227,0.48) !important; }
+.preview[data-theme="walnut"] .p-stats             { border-color: rgba(244,238,227,0.12) !important; }
+.preview[data-theme="walnut"] .p-hero .btn-outline {
+  color: #F4EEE3 !important;
+  border-color: rgba(244,238,227,0.30) !important;
+}
+.preview[data-theme="walnut"] .p-hero .btn-outline:hover {
+  border-color: rgba(244,238,227,0.65) !important;
+}
+
+/* ── Gallery ───────────────────────────────────────────────── */
+.p-gallery-section {
+  padding: 0 3rem 4.5rem;
+}
+
+.p-gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-auto-rows: 265px;
+  gap: 0.5rem;
+  margin-top: 2.5rem;
+}
+.p-gallery-item {
+  overflow: hidden;
+  position: relative;
+  cursor: pointer;
+  background: var(--bg-card);
+}
+.p-gallery-item:nth-child(1) { grid-column: span 2; grid-row: span 2; }
+.p-gallery-item img {
+  width: 100%; height: 100%;
+  object-fit: cover; display: block;
+  transition: transform 0.65s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.p-gallery-item:hover img { transform: scale(1.05); }
+.p-gallery-overlay {
+  position: absolute; inset: 0;
+  background: linear-gradient(to top, rgba(30,18,8,0.85) 0%, transparent 55%);
+  opacity: 0;
+  transition: opacity 0.4s;
+  display: flex; flex-direction: column;
+  justify-content: flex-end;
+  padding: 1.5rem;
+}
+.p-gallery-item:hover .p-gallery-overlay { opacity: 1; }
+.p-gallery-overlay h4 {
+  font-family: var(--heading);
+  font-size: 1rem; font-weight: 600;
+  color: #F4EEE3; margin-bottom: 0.2rem;
+}
+.p-gallery-overlay span {
+  font-family: var(--body);
+  font-size: 0.68rem; letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(212,168,90,0.9);
+}
+
+/* ── Testimonial ───────────────────────────────────────────── */
+.p-testimonial-section {
+  padding: 0 3rem 4.5rem;
+}
+
+.p-testimonial {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  padding: 2.8rem 3rem;
+  max-width: 680px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.p-stars {
+  color: var(--accent);
+  font-size: 0.75rem;
+  letter-spacing: 4px;
+  margin-bottom: 1.5rem;
+}
+
+.p-quote {
+  font-family: var(--heading);
+  font-size: 1.15rem;
+  font-style: italic;
+  line-height: 1.7;
+  color: var(--text-dim);
+  margin-bottom: 1.8rem;
+}
+
+.p-author {
+  font-family: var(--body);
+  font-size: 0.73rem;
+  color: var(--text-muted);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+/* ── CTA ───────────────────────────────────────────────────── */
+.p-cta {
+  background: var(--bg-card);
+  border-top: 1px solid var(--border);
+  padding: 5rem 3rem;
+  text-align: center;
+}
+
+.p-cta h2 {
+  font-family: var(--heading);
+  font-size: clamp(1.8rem, 3vw, 2.6rem);
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 1rem;
+}
+.p-cta h2 em { font-style: italic; color: var(--accent); }
+
+.p-cta > p {
+  font-family: var(--body);
+  font-size: 0.92rem;
+  color: var(--text-dim);
+  margin-bottom: 2.2rem;
+  font-weight: 300;
+}
+
+/* ── Footer ────────────────────────────────────────────────── */
+.p-footer {
+  padding: 1.5rem 3rem;
+  border-top: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: var(--bg);
+}
+
+.p-footer-logo {
+  font-family: var(--heading);
+  font-size: 1rem;
+  color: var(--text);
+}
+.p-footer-logo span { color: var(--accent); }
+
+.p-footer-copy {
+  font-family: var(--body);
+  font-size: 0.72rem;
+  color: var(--text-muted);
+}
+
+/* ── Responsive ────────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .p-nav { padding: 1rem 1.5rem; }
+  .p-nav-links { display: none; }
+  .p-hero { padding: 4rem 1.5rem 3.5rem; }
+  .p-cards { grid-template-columns: 1fr; }
+  .p-cards-section, .p-gallery-section, .p-testimonial-section, .p-cta { padding-left: 1.5rem; padding-right: 1.5rem; }
+  .p-gallery-grid { grid-template-columns: 1fr 1fr; grid-auto-rows: 200px; }
+  .p-gallery-item:nth-child(1) { grid-column: span 2; grid-row: span 1; }
+  .p-stats { gap: 1.5rem; }
+  .p-footer { padding: 1.2rem 1.5rem; flex-direction: column; gap: 0.5rem; text-align: center; }
+  .p-divider { margin: 0 1.5rem; }
+  .switcher { gap: 0.3rem; padding: 0.6rem 1rem; overflow-x: auto; }
+  .theme-btn { padding: 0.4rem 0.75rem; white-space: nowrap; }
+}
+
+</style>
+</head>
+<body>
+
+<!-- ── Theme Switcher ─────────────────────────────────────── -->
+<div class="switcher">
+  <span class="switcher-label">Theme</span>
+  <button class="theme-btn active" data-t="linen">🌾 Natural Linen</button>
+  <button class="theme-btn"        data-t="forest">🌲 Forest Dark</button>
+  <button class="theme-btn"        data-t="ink">🖋 Ink &amp; Amber</button>
+  <button class="theme-btn"        data-t="terra">🍂 Terracotta</button>
+  <button class="theme-btn"        data-t="walnut">✦ Applied</button>
+</div>
+
+<!-- ── Preview ────────────────────────────────────────────── -->
+<div class="preview" data-theme="linen">
+
+  <nav class="p-nav">
+    <div class="p-logo">Wood<span>&</span>Craft</div>
+    <ul class="p-nav-links">
+      <li><a href="#">Collections</a></li>
+      <li><a href="#">Gallery</a></li>
+      <li><a href="#">Story</a></li>
+      <li><a href="#">Process</a></li>
+    </ul>
+    <button class="p-nav-cta">Inquire</button>
+  </nav>
+
+  <section class="p-hero">
+    <div class="p-hero-bg">
+      <img src="images/8e301c_996bef65cbf145bb8b3282e7eb535ef9~mv2.avif" alt="Custom teak cabinet">
+    </div>
+    <div class="p-hero-content">
+      <div class="p-tag">Handcrafted in Thailand</div>
+      <h1>Where Raw Wood Becomes <em>Living Art</em></h1>
+      <p>Bespoke furniture and artisan woodcraft — hand-shaped from carefully selected hardwoods, designed to bring warmth and lasting beauty to your space.</p>
+      <div class="p-buttons">
+        <a href="#" class="btn-primary">View Our Work</a>
+        <a href="#" class="btn-outline">Custom Orders →</a>
+      </div>
+      <div class="p-stats">
+        <div class="p-stat"><h3>100+</h3><p>Pieces Crafted</p></div>
+        <div class="p-stat"><h3>12</h3><p>Wood Species</p></div>
+        <div class="p-stat"><h3>100%</h3><p>Handmade</p></div>
+      </div>
+    </div>
+  </section>
+
+  <div class="p-divider"></div>
+
+  <section class="p-cards-section">
+    <div class="p-section-label">What We Create</div>
+    <h2 class="p-section-title">Crafted for <em>Living</em></h2>
+    <div class="p-cards">
+      <div class="p-card">
+        <div class="p-card-img"><img src="images/8e301c_996bef65cbf145bb8b3282e7eb535ef9~mv2.avif" alt="Custom cabinet"></div>
+        <div class="p-card-num">01</div>
+        <h4>Furniture</h4>
+        <p>Dining tables, chairs, shelving and storage — built solid with traditional joinery for daily life.</p>
+        <div class="p-card-arrow">→</div>
+      </div>
+      <div class="p-card">
+        <div class="p-card-img"><img src="images/8e301c_559dd5651d34497bb1cb410296d71e2f~mv2.avif" alt="Teak wall panelling"></div>
+        <div class="p-card-num">02</div>
+        <h4>Wall Panelling</h4>
+        <p>Rich teak and walnut cladding that transforms a plain wall into a statement piece.</p>
+        <div class="p-card-arrow">→</div>
+      </div>
+      <div class="p-card">
+        <div class="p-card-img"><img src="images/632755921_1325897502906373_991292285713342938_n.jpg" alt="Wave TV console"></div>
+        <div class="p-card-num">03</div>
+        <h4>Custom Orders</h4>
+        <p>Share your vision — we'll design and build it from scratch, tailored exactly to your space.</p>
+        <div class="p-card-arrow">→</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Gallery — visible on Applied theme only -->
+  <section class="p-gallery-section">
+    <div class="p-section-label">Portfolio</div>
+    <h2 class="p-section-title">Selected <em>Works</em></h2>
+    <div class="p-gallery-grid">
+
+      <!-- Feature — spans 2 cols × 2 rows -->
+      <div class="p-gallery-item">
+        <img src="images/8e301c_559dd5651d34497bb1cb410296d71e2f~mv2.avif" alt="Teak wall panelling">
+        <div class="p-gallery-overlay">
+          <h4>Teak Wall Panelling</h4>
+          <span>Interior · Teak</span>
+        </div>
+      </div>
+
+      <div class="p-gallery-item">
+        <img src="images/preview_new5.jpg" alt="Oak TV wall unit with LED">
+        <div class="p-gallery-overlay">
+          <h4>Oak TV Wall Unit</h4>
+          <span>Furniture · White Oak</span>
+        </div>
+      </div>
+
+      <div class="p-gallery-item">
+        <img src="images/8e301c_6f07a9115c824cbfb799d5abaa0e138b~mv2.avif" alt="Floating teak TV console">
+        <div class="p-gallery-overlay">
+          <h4>Floating TV Console</h4>
+          <span>Furniture · Teak</span>
+        </div>
+      </div>
+
+      <div class="p-gallery-item">
+        <img src="images/8e301c_60116e4bb5a848ff81705cef8a50a576~mv2.avif" alt="Walnut fitted wardrobe">
+        <div class="p-gallery-overlay">
+          <h4>Fitted Wardrobe</h4>
+          <span>Storage · Walnut</span>
+        </div>
+      </div>
+
+      <div class="p-gallery-item">
+        <img src="images/632755921_1325897502906373_991292285713342938_n.jpg" alt="Wave-carved TV console">
+        <div class="p-gallery-overlay">
+          <h4>Wave-Carved TV Console</h4>
+          <span>Furniture · Teak</span>
+        </div>
+      </div>
+
+      <div class="p-gallery-item">
+        <img src="images/8e301c_a208fd4186e34edca51bf5e0e7df53ec~mv2.avif" alt="Kitchen with live edge island">
+        <div class="p-gallery-overlay">
+          <h4>Kitchen & Live Edge Island</h4>
+          <span>Kitchen · Teak & Marble</span>
+        </div>
+      </div>
+
+      <div class="p-gallery-item">
+        <img src="images/8e301c_996bef65cbf145bb8b3282e7eb535ef9~mv2.avif" alt="Custom storage cabinet">
+        <div class="p-gallery-overlay">
+          <h4>Custom Storage Cabinet</h4>
+          <span>Furniture · Teak</span>
+        </div>
+      </div>
+
+      <div class="p-gallery-item">
+        <img src="images/8e301c_9e95e07e3b524c5ebab47b9b92baf757~mv2.avif" alt="Restaurant dining counter">
+        <div class="p-gallery-overlay">
+          <h4>Restaurant Dining Counter</h4>
+          <span>Commercial · Maple</span>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <section class="p-testimonial-section">
+    <div class="p-testimonial">
+      <div class="p-stars">★ ★ ★ ★ ★</div>
+      <p class="p-quote">"The dining table is absolutely stunning. You can feel the quality in every detail — the grain, the joints, the finish. It's become the centerpiece of our home."</p>
+      <div class="p-author">Somchai P. &nbsp;·&nbsp; Teak Dining Table</div>
+    </div>
+  </section>
+
+  <section class="p-cta">
+    <h2>Let's Create Something <em>Beautiful</em></h2>
+    <p>Whether you have a specific design in mind or need guidance — every great piece starts with a conversation.</p>
+    <a href="#" class="btn-primary">Send an Inquiry →</a>
+  </section>
+
+  <footer class="p-footer">
+    <div class="p-footer-logo">Wood<span>&</span>Craft</div>
+    <p class="p-footer-copy">© 2026 Wood&Craft — All rights reserved</p>
+  </footer>
+
+</div>
+
+<script>
+  const btns       = document.querySelectorAll('.theme-btn');
+  const preview    = document.querySelector('.preview');
+  const heroBgImg  = document.querySelector('.p-hero-bg img');
+  const heroContent = document.querySelector('.p-hero-content');
+  const heroSection = document.querySelector('.p-hero');
+
+  function resetHero() {
+    if (heroBgImg) heroBgImg.style.transform = '';
+  }
+
+  function updateHeroScroll() {
+    if (preview.dataset.theme !== 'walnut') return;
+    const scrollY = window.scrollY;
+    const heroH   = heroSection ? heroSection.offsetHeight : window.innerHeight;
+    if (scrollY < heroH) {
+      if (heroBgImg)
+        heroBgImg.style.transform = `translateY(${scrollY * 0.38}px)`;
+    }
+  }
+
+  btns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      btns.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      preview.dataset.theme = btn.dataset.t;
+      resetHero();
+      updateHeroScroll();
+    });
+  });
+
+  window.addEventListener('scroll', updateHeroScroll, { passive: true });
+</script>
+
+</body>
+</html>

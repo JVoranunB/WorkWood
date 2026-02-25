@@ -1,0 +1,6 @@
+# Claude Code session data
+.claude/
+
+# Temporary image previews generated during development
+images/preview*.jpg
+images/preview_new*.jpg
